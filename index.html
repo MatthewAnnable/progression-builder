@@ -1,0 +1,134 @@
+<!doctype html>
+<html lang="en-GB" data-app="prog">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Progression Builder</title>
+<style>
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.4 system-ui,-apple-system,sans-serif; }
+  .wrap { max-width:720px; margin:0 auto; padding:20px 16px 56px; }
+  h1 { margin:0 0 4px; }
+  .sub { color:var(--mute); margin:0 0 16px; font-size:15px; }
+  button { font:inherit; color:inherit; cursor:pointer; }
+  [hidden] { display:none !important; }
+  .row { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin:0 0 10px; }
+  .row > .lab { color:var(--mute); font-size:14px; font-weight:600; margin-right:2px; }
+  .pill { border:1.5px solid var(--line); background:var(--card); padding:9px 16px; font-weight:600; min-height:44px; }
+  .hint { color:var(--mute); font-size:15px; margin:0 0 14px; }
+  .card { background:var(--card); border:1px solid var(--line); padding:16px; margin:14px 0; }
+  .cardhead { display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap; margin-bottom:12px; }
+  .cardhead b { font-size:17px; }
+  .cardhead .row { margin:0; }
+  .cardhead .pill { padding:6px 12px; min-height:36px; font-size:14px; }
+
+  /* The progression: one box a bar */
+  .slots { display:grid; grid-template-columns:repeat(4, minmax(0, 1fr)); gap:8px; }
+  .slot { position:relative; }
+  .slot .pick { width:100%; min-height:96px; border:2px solid var(--line); border-radius:14px; background:var(--chip);
+              display:flex; flex-direction:column; align-items:center; justify-content:center; gap:2px; padding:24px 2px 8px; }
+  .slot .barno { position:absolute; top:6px; left:9px; font-size:11px; font-weight:700; color:var(--mute); pointer-events:none; }
+  .slot .name { font-size:clamp(20px, 6vw, 28px); font-weight:800; letter-spacing:-.02em; line-height:1; }
+  .slot .name.long { font-size:clamp(16px, 4.6vw, 22px); }
+  .slot .num { font-size:13px; font-weight:600; color:var(--mute); }
+  .slot.empty .name { color:var(--mute); font-weight:500; font-size:22px; }
+  .slot.sel .pick { border-color:var(--accent); background:var(--card); }
+  .slot.now .pick { border-color:var(--action); }
+  .slot .x { position:absolute; top:2px; right:2px; width:30px; height:30px; border:0; background:none; color:var(--mute); font-size:15px; border-radius:50%; }
+  .beatdots { display:flex; justify-content:center; gap:4px; height:6px; margin-top:6px; }
+  .beatdots i { width:6px; height:6px; border-radius:50%; background:var(--line); }
+  .slot.now .beatdots i.on { background:var(--action); }
+  .countin { font-weight:700; color:var(--action); min-height:22px; margin:10px 0 0; }
+
+  /* The chords to choose from */
+  .group { margin:0 0 14px; }
+  .group:last-child { margin-bottom:0; }
+  .group h2 { font-size:15px; margin:0 0 8px; }
+  .group h2 span { color:var(--mute); font-weight:500; }
+  .chords { display:flex; flex-wrap:wrap; gap:8px; }
+  .chord { min-width:74px; min-height:60px; border:1.5px solid var(--line); border-radius:14px; background:var(--bg);
+           display:flex; flex-direction:column; align-items:center; justify-content:center; padding:6px 12px; }
+  .chord b { font-size:21px; letter-spacing:-.02em; line-height:1.1; }
+  .chord span { font-size:12px; font-weight:600; color:var(--mute); }
+  .chord:active { border-color:var(--accent); }
+
+  .controls { display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin:14px 0; }
+  .big { border:0; padding:14px 30px; font-size:18px; min-width:130px; min-height:56px; }
+  .ghost { background:none; border:1.5px solid var(--line); padding:12px 18px; font-weight:600; min-height:44px; }
+  .tempo { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  .tempo input { flex:1; min-width:0; }
+  .tempo .val { font-weight:800; font-size:20px; font-variant-numeric:tabular-nums; white-space:nowrap; }
+  .tempo .val small { font-size:13px; font-weight:600; color:var(--mute); }
+  .step { border:1.5px solid var(--line); background:var(--card); border-radius:12px; width:44px; height:44px; font-size:20px; font-weight:700; flex:none; }
+  .switches { display:flex; flex-wrap:wrap; gap:8px; }
+
+  /* Chord shapes */
+  .shapes { display:flex; flex-wrap:wrap; gap:14px 18px; }
+  .shape { text-align:center; }
+  .shape b { display:block; font-size:16px; margin-bottom:2px; }
+  .shape svg { width:84px; height:auto; display:block; }
+  .shape .str, .shape .fr { stroke:var(--string); stroke-width:1.2; }
+  .shape .nut { stroke:var(--ink); stroke-width:3.5; }
+  .shape .dot { fill:var(--accent); }
+  .shape .open { fill:none; stroke:var(--mute); stroke-width:1.4; }
+  .shape text { fill:var(--mute); font-size:11px; font-weight:600; text-anchor:middle; }
+  .links { display:flex; flex-direction:column; gap:10px; align-items:flex-start; margin-top:18px; font-size:15px; }
+  .links a, .linkbtn { color:var(--accent); font-weight:600; text-decoration:underline; text-underline-offset:3px;
+                       background:none; border:0; padding:8px 0; min-height:44px; display:inline-flex; align-items:center; text-align:left; }
+  #shareMsg { color:var(--mute); font-size:14px; }
+</style>
+<meta name="theme-color" content="#141A17" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#E9F0E6" media="(prefers-color-scheme: light)">
+<link rel="stylesheet" href="evening.css">
+</head>
+<body>
+<div class="wrap">
+  <p class="ma-brand"><svg viewBox="-12 -12 779 339" aria-hidden="true"><polyline points="0,158 85,158 159,315 159,0 292,315 425,0 425,315 559,0 693,315 533,158 755,158" fill="none" stroke="currentColor" stroke-width="20" stroke-linecap="round" stroke-linejoin="round"/></svg>Matthew Annable</p>
+  <h1>Progression Builder</h1>
+  <p class="sub">Choose chords from a key, hear them over a drum beat, then strum or sing along.</p>
+
+  <div class="row" id="levels" role="group" aria-label="Level"></div>
+  <p class="hint" id="levelDesc"></p>
+  <div class="row" id="keys" role="group" aria-label="Key"></div>
+
+  <div class="card">
+    <div class="cardhead"><b>Your progression</b><div class="row" id="barsRow" role="group" aria-label="Length"></div></div>
+    <div class="slots" id="slots"></div>
+    <p class="countin" id="countin" aria-live="polite"></p>
+  </div>
+
+  <div class="card" id="palette"></div>
+
+  <div class="controls">
+    <button class="big" id="play">Play</button>
+    <button class="ghost" id="clear">Start again</button>
+  </div>
+
+  <div class="card">
+    <div class="tempo">
+      <button class="step" id="tDown" aria-label="Slower">−</button>
+      <input type="range" id="tempo" min="50" max="160" aria-label="Speed">
+      <button class="step" id="tUp" aria-label="Faster">+</button>
+      <div class="val"><span id="bpmVal"></span> <small>bpm</small></div>
+    </div>
+    <div class="switches">
+      <button class="pill" id="drumsBtn" aria-pressed="true">Drums</button>
+      <button class="pill" id="chordsBtn" aria-pressed="true">Chords</button>
+    </div>
+    <p class="hint" id="soundHint" style="margin:10px 0 0"></p>
+  </div>
+
+  <div class="card" id="shapesCard" hidden>
+    <div class="cardhead"><b>Chord shapes</b></div>
+    <div class="shapes" id="shapes"></div>
+  </div>
+
+  <div class="links">
+    <a id="neckLink" target="_blank" rel="noopener"></a>
+    <a id="pentLink" target="_blank" rel="noopener"></a>
+    <span><button class="linkbtn" id="share">Copy a link to this progression</button> <span id="shareMsg" aria-live="polite"></span></span>
+  </div>
+</div>
+<script type="module" src="app.js"></script>
+</body>
+</html>
