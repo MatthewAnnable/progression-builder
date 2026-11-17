@@ -105,6 +105,13 @@ export function serializeLink(state) {
 }
 // The Fretboard Visualiser already reads key= and scale= from its link.
 export const VISUALISER = 'https://matthewannable.github.io/guitar-interval-visualiser/';
-export function visualiserLink(key, scale = 'major') {
-  return `${VISUALISER}#key=${encodeURIComponent(key.replace('#', 's'))}&scale=${scale}`;
+// Give it a progression as well ({ prog, bpm, level }) and the visualiser opens
+// in its "play over chords" mode: pk = the progression's key, lv = this level.
+export function visualiserLink(key, scale = 'major', jam = null) {
+  let url = `${VISUALISER}#key=${encodeURIComponent(key.replace('#', 's'))}&scale=${scale}`;
+  if (jam && jam.prog.some(Boolean)) {
+    url += `&pk=${key}&prog=${jam.prog.map(d => d || 0).join(',')}&bpm=${jam.bpm}`;
+    if (jam.level) url += `&lv=${jam.level}`;
+  }
+  return url;
 }

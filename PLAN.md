@@ -52,26 +52,40 @@ have made. The two apps are separate today but were built to meet:
 - `chordTones(key, degree)` gives the three notes of each chord, ready for the
   fretboard to mark.
 
-**Steps towards one "play over your chords" view** (each useful on its own)
+**Built 17/11/2026: "play over chords" in the visualiser (steps 1 to 3)**
 
-1. **Carry the progression across.** The scale links add `prog=` and `bpm=`.
-   The visualiser shows the chords as a thin strip above the neck and gets a
-   Play button, using a copy of `audio.js`.
-2. **Show where to land.** While the loop plays, the visualiser rings the
-   current chord's three notes inside the scale shape. That is his improvising
-   advice (aim for chord notes, start and end phrases on them) made visible.
-3. **Suggest the scale.** For a major key: major pentatonic first, then the
-   full major scale, then the relative minor pentatonic as "the same notes from
-   a different home". The visualiser already treats scales that way.
-4. **One page.** If steps 1 to 3 earn their place, fold the builder's bar boxes
-   into that view so a student can change a chord without leaving the neck.
+When the progression has at least one chord, the builder's two scale links
+carry it: `#key=G&scale=majpent&pk=G&prog=1,5,6,4&bpm=80&lv=2` (`pk` = the
+progression's key, `lv` = the builder's level, so "change the chords" can
+return to the same place). The visualiser then:
 
-**Things to settle first**
+1. Shows the chords as a strip above the neck with a Play button, and loops
+   them with a copy of `audio.js`.
+2. Rings the notes of the chord being played, in amber, wherever they fall in
+   the scale. Stopped, tapping a chord in the strip shows that chord's notes.
+3. Offers three scales that share one set of notes: the key's major
+   pentatonic, the major scale, and the relative minor pentatonic.
+
+It hides the key and scale pickers in this mode, so the scale always fits the
+chords. Close returns to the plain visualiser, and the progression is never
+saved there, so the page opens as the plain visualiser next time.
+
+`theory.js` and `audio.js` are copied into the visualiser as `progression.js`
+and `audio.js`. **This folder is the master**: change them here, then copy them
+over (keeping the two-line header in the copies) and run both test files.
+
+**Still to do, if it earns its place**
+
+4. **One page.** Fold the builder's bar boxes into that view so a student can
+   change a chord without leaving the neck.
+- A chord note that is not in the scale on screen (the 4th and 7th are missing
+  from the pentatonic) is simply not shown. It could be drawn as a ghost dot.
+
+**Things to keep in mind**
 
 - The visualiser's own rules say no sound, one idea on screen, and that tapping
-  the neck never changes the key. So this should be a separate "Play over
-  chords" mode reached from the builder, not a change to the visualiser's
-  normal view.
+  the neck never changes the key. That is why this is a separate mode reached
+  only from the builder's links, and why the plain view is untouched.
 - The visualiser has all twelve keys and minor scales; the builder has five
   major keys. Minor keys in the builder come first if he wants minor-key
   writing, and the visualiser is already ready for them.

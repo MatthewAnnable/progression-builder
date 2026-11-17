@@ -89,7 +89,7 @@ function renderSlots() {
       </button>` + (deg ? `<button class="x" aria-label="Clear bar ${i + 1}">✕</button>` : '');
     d.querySelector('.pick').onclick = () => { state.sel = i; renderSlots(); };
     const x = d.querySelector('.x');
-    if (x) x.onclick = () => { state.prog[i] = 0; state.sel = i; saveProg(); renderSlots(); renderShapes(); };
+    if (x) x.onclick = () => { state.prog[i] = 0; state.sel = i; saveProg(); renderSlots(); renderShapes(); renderLinks(); };
     el.appendChild(d);
   });
 }
@@ -105,7 +105,7 @@ function chordButton(deg) {
     // Move on to the next empty bar, or the next bar along.
     const next = state.prog.findIndex((d, i) => i > state.sel && !d);
     state.sel = next >= 0 ? next : Math.min(state.sel + 1, state.bars - 1);
-    saveProg(); renderSlots(); renderShapes();
+    saveProg(); renderSlots(); renderShapes(); renderLinks();
   };
   return b;
 }
@@ -163,10 +163,15 @@ function renderSound() {
     : 'Chords are off: strum along to the drums.';
 }
 function renderLinks() {
-  $('neckLink').href = visualiserLink(state.key, 'major');
-  $('neckLink').textContent = `See the ${state.key} major scale on the neck`;
-  $('pentLink').href = visualiserLink(state.key, 'majpent');
-  $('pentLink').textContent = `See ${state.key} major pentatonic, for making up a melody`;
+  // With chords in the bars, the links carry the progression, and the fretboard
+  // page loops it and rings each chord's notes. With none, they just show the scale.
+  const jam = state.prog.some(Boolean) ? state : null;
+  $('pentLink').href = visualiserLink(state.key, 'majpent', jam);
+  $('pentLink').textContent = jam ? `Play ${state.key} major pentatonic over your chords`
+                                  : `See ${state.key} major pentatonic, for making up a melody`;
+  $('neckLink').href = visualiserLink(state.key, 'major', jam);
+  $('neckLink').textContent = jam ? `Play the ${state.key} major scale over your chords`
+                                  : `See the ${state.key} major scale on the neck`;
   $('shareMsg').textContent = '';
 }
 function render() { renderTop(); renderSlots(); renderPalette(); renderShapes(); renderSound(); renderLinks(); }
@@ -188,9 +193,9 @@ $('play').onclick = () => setPlaying(!engine.playing);
 $('clear').onclick = () => {
   if (engine.playing) setPlaying(false);
   state.prog = state.prog.map(() => 0); state.sel = 0;
-  saveProg(); renderSlots(); renderShapes();
+  saveProg(); renderSlots(); renderShapes(); renderLinks();
 };
-const setTempo = v => { keep('bpm', Math.max(50, Math.min(160, v))); renderSound(); };
+const setTempo = v => { keep('bpm', Math.max(50, Math.min(160, v))); renderSound(); renderLinks(); };
 $('tempo').oninput = e => setTempo(+e.target.value);
 $('tDown').onclick = () => setTempo(state.bpm - 2);
 $('tUp').onclick = () => setTempo(state.bpm + 2);

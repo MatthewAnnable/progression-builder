@@ -62,4 +62,11 @@ test('visualiser link uses its key= and scale= words', () => {
   assert.equal(T.visualiserLink('G'), 'https://matthewannable.github.io/guitar-interval-visualiser/#key=G&scale=major');
   assert.equal(T.visualiserLink('A', 'majpent'), 'https://matthewannable.github.io/guitar-interval-visualiser/#key=A&scale=majpent');
 });
+test('with chords, the visualiser link carries the progression', () => {
+  assert.equal(T.visualiserLink('G', 'majpent', { prog: [1, 5, 6, 4], bpm: 90, level: 2 }),
+    'https://matthewannable.github.io/guitar-interval-visualiser/#key=G&scale=majpent&pk=G&prog=1,5,6,4&bpm=90&lv=2');
+});
+test('with no chords, the visualiser link is just the scale', () => {
+  assert.equal(T.visualiserLink('G', 'major', { prog: [0, 0, 0, 0], bpm: 80 }), T.visualiserLink('G', 'major'));
+});
 console.log(`\nAll ${n} tests passed`);
