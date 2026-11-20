@@ -100,3 +100,14 @@ app's Sing From a Chord uses (nbrosowsky/tonejs-instruments, CC-BY 3.0), with
 each recording's tuning measured and corrected on load. Down strums on 1 and 3,
 lighter up strums on 2 and 4. The plucked sound only stands in until a note has
 loaded, or if the student is offline. Play waits up to 4 s for the first load.
+
+## Home / Away / Tension colours (20/11/2026)
+
+Matthew found every chord box looking the same. Each chord now wears its
+function's colour, with a small line icon so it doesn't rely on colour alone:
+Home moss + house, Away amber + arrow heading out, Tension clay + tensed spring
+(the Play-Along harmony view's tonic green / subdominant sand / dominant rose,
+in Evening colours). Bars, palette, group headings, a key on level 1, and the
+chord-shape dots all use it. The bar that's playing fills with its colour; the
+selected bar has an ink outline. Clay is fine here: this app has no right/wrong
+marking. Day theme uses a darker amber (#A86A10) for amber words.

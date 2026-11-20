@@ -32,12 +32,40 @@
   .slot .name.long { font-size:clamp(16px, 4.6vw, 22px); }
   .slot .num { font-size:13px; font-weight:600; color:var(--mute); }
   .slot.empty .name { color:var(--mute); font-weight:500; font-size:22px; }
-  .slot.sel .pick { border-color:var(--accent); background:var(--card); }
-  .slot.now .pick { border-color:var(--action); }
+  .slot.sel .pick { outline:2.5px solid var(--ink); outline-offset:2px; }
+  .slot.empty.sel .pick { background:var(--card); }
   .slot .x { position:absolute; top:2px; right:2px; width:30px; height:30px; border:0; background:none; color:var(--mute); font-size:15px; border-radius:50%; }
   .beatdots { display:flex; justify-content:center; gap:4px; height:6px; margin-top:6px; }
   .beatdots i { width:6px; height:6px; border-radius:50%; background:var(--line); }
   .slot.now .beatdots i.on { background:var(--action); }
+
+  /* Home, Away, Tension: each chord wears its function's colour (as in the
+     Play-Along's harmony view: tonic green, subdominant sand, dominant rose).
+     The bar that's playing fills with it. */
+  .fn-home    { --fn:var(--moss);  --fn-on:var(--on-moss);  --fn-tint:var(--glow-moss);  --fn-ink:var(--moss); }
+  .fn-away    { --fn:var(--amber); --fn-on:var(--on-amber); --fn-tint:var(--glow-amber); --fn-ink:var(--amber); }
+  .fn-tension { --fn:var(--clay);  --fn-on:var(--on-clay);  --fn-tint:var(--glow-clay);  --fn-ink:var(--clay); }
+  /* Day theme: the light amber is too pale for words on the pale ground. */
+  @media (prefers-color-scheme: light) { .fn-away { --fn-ink:#A86A10; } }
+  .fnicon { width:13px; height:13px; fill:none; stroke:currentColor; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round;
+            vertical-align:-1px; margin-right:4px; flex:none; }
+  .slot[class*="fn-"] .pick { background:var(--fn-tint); border-color:var(--fn); }
+  .slot[class*="fn-"] .num { color:var(--fn-ink); display:inline-flex; align-items:center; }
+  .slot[class*="fn-"].now .pick { background:var(--fn); color:var(--fn-on); }
+  .slot[class*="fn-"].now .num { color:var(--fn-on); }
+  .slot[class*="fn-"].now .beatdots i { background:color-mix(in srgb, var(--fn-on) 25%, transparent); }
+  .slot[class*="fn-"].now .beatdots i.on { background:var(--fn-on); }
+  .slot[class*="fn-"].now .x, .slot[class*="fn-"].now .barno { color:var(--fn-on); }
+  .chord[class*="fn-"] { background:var(--fn-tint); border-color:var(--fn); }
+  .chord[class*="fn-"] span { color:var(--fn-ink); display:inline-flex; align-items:center; }
+  .chord[class*="fn-"]:active { background:var(--fn); color:var(--fn-on); }
+  .chord[class*="fn-"]:active span { color:var(--fn-on); }
+  .group h2[class*="fn-"] { color:var(--fn-ink); display:flex; align-items:center; gap:5px; }
+  .group h2[class*="fn-"] .fnicon { width:16px; height:16px; margin-right:1px; }
+  .fnkey { display:flex; flex-wrap:wrap; gap:6px 16px; margin:-2px 0 10px; font-size:14px; font-weight:700; }
+  .fnkey span { color:var(--fn-ink); display:inline-flex; align-items:center; }
+  .shape[class*="fn-"] b { color:var(--fn-ink); }
+  .shape[class*="fn-"] .dot { fill:var(--fn); }
   .countin { font-weight:700; color:var(--action); min-height:22px; margin:10px 0 0; }
 
   /* The chords to choose from */
