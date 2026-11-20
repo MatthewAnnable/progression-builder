@@ -3,16 +3,8 @@ import { KEYS, LEVELS, FUNCTIONS, FUNCTION_ORDER, DEGREES, levelOf, chordName, n
          chordMidi, shapeDiagram, parseLink, serializeLink, visualiserLink } from './theory.js';
 import { createEngine } from './audio.js';
 
-// Home, Away and Tension each have a colour and a small line icon (house,
-// arrow heading out, a tensed spring), so the function shows at a glance and
-// doesn't rely on colour alone. Colours: index.html, the .fn-… classes.
-const FN_ICON = {
-  home: '<path d="M4 11.5 12 4.5l8 7M6.5 9.5V19.5h11V9.5"/>',
-  away: '<path d="M6 18 18 6M9 6h9v9"/>',
-  tension: '<path d="M3 12l2.5-6 3.5 12 3.5-12 3.5 12 3.5-12L21 12"/>',
-};
+// Home, Away and Tension each have a colour (index.html, the .fn-… classes).
 const fnOf = deg => (deg && DEGREES[deg] ? DEGREES[deg].fn : null);
-const fnIcon = fn => fn ? `<svg class="fnicon" viewBox="0 0 24 24" aria-hidden="true">${FN_ICON[fn]}</svg>` : '';
 
 const $ = id => document.getElementById(id);
 const store = {
@@ -95,7 +87,7 @@ function renderSlots() {
     const name = deg ? chordName(state.key, deg) : '+';
     d.innerHTML = `<span class="barno">${i + 1}</span>
       <button class="pick" aria-label="Bar ${i + 1}: ${deg ? name : 'empty'}">
-        <span class="name${name.length > 2 ? ' long' : ''}">${name}</span><span class="num">${deg ? fnIcon(fnOf(deg)) + nashville(deg) : '&nbsp;'}</span>
+        <span class="name${name.length > 2 ? ' long' : ''}">${name}</span><span class="num">${deg ? nashville(deg) : '&nbsp;'}</span>
         <span class="beatdots"><i></i><i></i><i></i><i></i></span>
       </button>` + (deg ? `<button class="x" aria-label="Clear bar ${i + 1}">✕</button>` : '');
     d.querySelector('.pick').onclick = () => { state.sel = i; renderSlots(); };
@@ -109,7 +101,7 @@ function chordButton(deg) {
   const b = document.createElement('button');
   b.className = 'chord fn-' + fnOf(deg);
   const name = chordName(state.key, deg);
-  b.innerHTML = `<b>${name}</b><span>${fnIcon(fnOf(deg))}${nashville(deg)}</span>`;
+  b.innerHTML = `<b>${name}</b><span>${nashville(deg)}</span>`;
   b.onclick = () => {
     engine.preview(chordMidi(name));
     state.prog[state.sel] = deg;
@@ -130,9 +122,9 @@ function renderPalette() {
     const g = document.createElement('div');
     g.className = 'group';
     g.innerHTML = fn
-      ? `<h2 class="fn-${fn}">${fnIcon(fn)}${FUNCTIONS[fn].label} <span>(${FUNCTIONS[fn].theory})</span></h2>`
+      ? `<h2 class="fn-${fn}">${FUNCTIONS[fn].label} <span>(${FUNCTIONS[fn].theory})</span></h2>`
       : `<h2>The chords <span>(tap one to put it in the bar)</span></h2>
-         <p class="fnkey">${FUNCTION_ORDER.map(f => `<span class="fn-${f}">${fnIcon(f)}${FUNCTIONS[f].label}</span>`).join('')}</p>`;
+         <p class="fnkey">${FUNCTION_ORDER.map(f => `<span class="fn-${f}">${FUNCTIONS[f].label}</span>`).join('')}</p>`;
     const row = document.createElement('div');
     row.className = 'chords';
     degs.forEach(d => row.appendChild(chordButton(d)));

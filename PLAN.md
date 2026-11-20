@@ -104,8 +104,8 @@ loaded, or if the student is offline. Play waits up to 4 s for the first load.
 ## Home / Away / Tension colours (20/11/2026)
 
 Matthew found every chord box looking the same. Each chord now wears its
-function's colour, with a small line icon so it doesn't rely on colour alone:
-Home moss + house, Away amber + arrow heading out, Tension clay + tensed spring
+function's colour: Home moss, Away amber, Tension clay. (Small icons for each
+were tried and removed the same day: Matthew found them too busy.) This is
 (the Play-Along harmony view's tonic green / subdominant sand / dominant rose,
 in Evening colours). Bars, palette, group headings, a key on level 1, and the
 chord-shape dots all use it. The bar that's playing fills with its colour; the

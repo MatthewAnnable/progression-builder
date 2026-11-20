@@ -47,8 +47,6 @@
   .fn-tension { --fn:var(--clay);  --fn-on:var(--on-clay);  --fn-tint:var(--glow-clay);  --fn-ink:var(--clay); }
   /* Day theme: the light amber is too pale for words on the pale ground. */
   @media (prefers-color-scheme: light) { .fn-away { --fn-ink:#A86A10; } }
-  .fnicon { width:13px; height:13px; fill:none; stroke:currentColor; stroke-width:2.4; stroke-linecap:round; stroke-linejoin:round;
-            vertical-align:-1px; margin-right:4px; flex:none; }
   .slot[class*="fn-"] .pick { background:var(--fn-tint); border-color:var(--fn); }
   .slot[class*="fn-"] .num { color:var(--fn-ink); display:inline-flex; align-items:center; }
   .slot[class*="fn-"].now .pick { background:var(--fn); color:var(--fn-on); }
@@ -60,8 +58,7 @@
   .chord[class*="fn-"] span { color:var(--fn-ink); display:inline-flex; align-items:center; }
   .chord[class*="fn-"]:active { background:var(--fn); color:var(--fn-on); }
   .chord[class*="fn-"]:active span { color:var(--fn-on); }
-  .group h2[class*="fn-"] { color:var(--fn-ink); display:flex; align-items:center; gap:5px; }
-  .group h2[class*="fn-"] .fnicon { width:16px; height:16px; margin-right:1px; }
+  .group h2[class*="fn-"] { color:var(--fn-ink); }
   .fnkey { display:flex; flex-wrap:wrap; gap:6px 16px; margin:-2px 0 10px; font-size:14px; font-weight:700; }
   .fnkey span { color:var(--fn-ink); display:inline-flex; align-items:center; }
   .shape[class*="fn-"] b { color:var(--fn-ink); }
