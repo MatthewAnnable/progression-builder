@@ -91,3 +91,12 @@ over (keeping the two-line header in the copies) and run both test files.
   writing, and the visualiser is already ready for them.
 - Whether `audio.js` is copied into the visualiser or the two apps become one
   repo. Copying is simpler; one repo is tidier if step 4 happens.
+
+## Guitar sound (20/11/2026)
+
+Matthew found the plucked (Karplus-Strong) chords unpleasant to play along to.
+The loop now strums the real acoustic steel-string recordings that the singing
+app's Sing From a Chord uses (nbrosowsky/tonejs-instruments, CC-BY 3.0), with
+each recording's tuning measured and corrected on load. Down strums on 1 and 3,
+lighter up strums on 2 and 4. The plucked sound only stands in until a note has
+loaded, or if the student is offline. Play waits up to 4 s for the first load.
